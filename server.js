@@ -18,27 +18,8 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
-// conection to db
-app.get("/user", (req, res) => {
-  conn.query("SELECT * FROM user", (err, result) => {
-    if (err) {
-      console.log("error: ", err);
-      res.status(500).send({
-        message: err.message || "Some error ocurred findinf users.",
-      });
-      return;
-    }
-
-    if (result.length) {
-      console.log("user found: ", result);
-      res.send(result)
-      return;
-    }
-  });
-});
-
 // Our routes
-require("./routes/usuario.route")(app)
+require("./routes/user.route")(app)
 
 app.listen(PORT, () => {
   console.log(`App listening on http://${HOST}:${PORT}`);
