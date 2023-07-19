@@ -8,6 +8,11 @@ const PORT = process.env.EXPRESS_PORT || 3000;
 const HOST = process.env.EXPRESS_HOST || "localhost";
 const conn = require("./db_connection");
 
+// parse requests of content-type - application/json
+app.use(express.json());
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+
 // Root route
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/index.html"));
@@ -31,6 +36,9 @@ app.get("/user", (req, res) => {
     }
   });
 });
+
+// Our routes
+require("./routes/usuario.route")(app)
 
 app.listen(PORT, () => {
   console.log(`App listening on http://${HOST}:${PORT}`);
