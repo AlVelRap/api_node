@@ -1,8 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
-
-// Constants
-const secret = process.env.JWT_SECRET || "my-secret";
+const { JWT_SECRET } = require("../constants");
 
 const isAuthenticated = (req, res, next) => {
   const token = req.headers.authorization;
@@ -11,7 +9,10 @@ const isAuthenticated = (req, res, next) => {
     return res.sendStatus(403);
   }
 
-  jwt.verify(token, secret, (err, decoded) => {
+  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.sendStatus(403);
+    }
     User.findById(decoded._id, (err, data) => {
       if (err) {
         return res.sendStatus(403);

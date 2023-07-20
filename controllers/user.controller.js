@@ -1,16 +1,24 @@
 // -----------------------
-// TODO: 
+// TODO:
 //  - Update only pass
-//  - JSON Web Token
 // -----------------------
 
 const User = require("../models/user.model.js");
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET, DIGEST_PASSWORD, JWT_LIFE, JWT_ALGORITHM } = require("../constants");
 
 // Constants for encrypt password
 const iterations = 10000;
 const keylen = 64;
-const digest = process.env.DIGEST_PASSWORD || "sha256";
+
+// Function for token
+const signToken = (_id) => {
+  return jwt.sign({ _id }, JWT_SECRET, {
+    algorithm: JWT_ALGORITHM,
+    expiresIn: JWT_LIFE,
+  });
+};
 
 exports.register = (req, res) => {
   if (!req.body) {
@@ -36,7 +44,7 @@ exports.register = (req, res) => {
         newSalt,
         iterations,
         keylen,
-        digest,
+        DIGEST_PASSWORD,
         (err, key) => {
           const encryptedPassword = key.toString("base64");
           // Create a new User
@@ -79,11 +87,12 @@ exports.login = (req, res) => {
       data.salt,
       iterations,
       keylen,
-      digest,
+      DIGEST_PASSWORD,
       (err, key) => {
         const encryptedPassword = key.toString("base64");
         if (data.password === encryptedPassword) {
-          return res.send({ token: "token" }); // In the fututre we'll send a JSON Web Token
+          const token = signToken(data.id_user);
+          return res.send({ token });
         }
         return res.status(404).send({
           message: `Incorrect username or password`,
@@ -94,8 +103,7 @@ exports.login = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-  // Change this when JSON web token
-  User.findById(req.body.id_user, (err, data) => {
+  User.findById(req.user.id_user, (err, data) => {
     if (err) {
       console.log(err);
       if (err.kind === "not_found") {
@@ -123,14 +131,17 @@ exports.update = (req, res) => {
       message: "The request cannot be empty!",
     });
   }
+  // This update dont update id_user, password or salt
+  req.body.id_user = req.user.id_user;
+  req.body.password = req.user.password;
+  req.body.salt = req.user.salt;
 
   // console.log(req.body);
-  // Change this when JSON web token
-  User.updateById(req.body.id_user, new User(req.body), (err, data) => {
+  User.updateById(req.user.id_user, new User(req.body), (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         return res.status(404).send({
-          message: `User with id ${req.body.id_user} not found.`,
+          message: `User with id ${req.user.id_user} not found.`,
         });
       } else {
         return res.status(500).send({
@@ -148,16 +159,15 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  // Change this when JSON web token
-  User.remove(req.body.id_user, (err, data) => {
+  User.remove(req.user.id_user, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `User with id ${req.body.id_user} not found.`,
+          message: `User with id ${req.user.id_user} not found.`,
         });
       } else {
         res.status(500).send({
-          message: `Cannot delete User with id ${req.body.id_user}.`,
+          message: `Cannot delete User with id ${req.user.id_user}.`,
         });
       }
     } else res.send({ message: `User deleted successfully!` });
