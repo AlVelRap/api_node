@@ -6,7 +6,6 @@ const path = require("path");
 // Variables
 const PORT = process.env.EXPRESS_PORT || 3000;
 const HOST = process.env.EXPRESS_HOST || "localhost";
-const conn = require("./db_connection");
 
 // parse requests of content-type - application/json
 app.use(express.json());
