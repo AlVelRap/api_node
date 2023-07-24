@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  database:
+    image: mysql:8.0.31
+    env_file: ./.env
+    restart: unless-stopped
+    ports:
+      - $MYSQLDB_LOCAL_PORT:$DB_PORT
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_DATABASE=$DB_NAME
+      # - MYSQL_USER=$MYSQLDB_USER
+      # - MYSQL_PASSWORD=$MYSQLDB_PASSWORD
+    volumes: 
+      - ./init:/docker-entrypoint-initdb.d
+  backend:
+    depends_on:
+      - database
+    build: .
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    environment:
+      - DB_HOST=database
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_NAME=$DB_NAME
+      - DB_PORT=$DB_PORT
+    stdin_open: true
+    tty: true

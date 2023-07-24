@@ -21,5 +21,8 @@ app.get("/", (req, res) => {
 require("./routes/user.route")(app)
 
 app.listen(PORT, () => {
-  console.log(`App listening on http://${HOST}:${PORT}`);
+  if(process.env.DB_HOST == "localhost")
+    console.log(`App listening on http://${HOST}:${PORT}`);
+  else
+    console.log(`App listening on http://${HOST}:${process.env.NODE_LOCAL_PORT}`);
 });
