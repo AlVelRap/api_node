@@ -4,7 +4,8 @@
   "description": "This API can be use as base for a larger API that use NodeJS and MySQL.",
   "main": "server.js",
   "scripts": {
-    "test": "test",
+    "test": "mocha ./test/*.spec.js",
+    "test:watch": "mocha --watch ./test/*.spec.js",
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
@@ -34,6 +35,9 @@
   "devDependencies": {
     "chai": "^4.3.7",
     "mocha": "^10.2.0",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "rewire": "^6.0.0",
+    "sinon": "^15.2.0",
+    "sinon-chai": "^3.7.0"
   }
 }
