@@ -69,6 +69,7 @@ npm run dev
 ## Inspiration
 
 This API is based on this [bezkoder tutorial](https://www.bezkoder.com/node-js-rest-api-express-mysql/).
+API's test are based on this [Rishabh Rawat Tutorial](https://rrawat.com/blog/unit-test-express-api)
 
 ## Roadmap
 
