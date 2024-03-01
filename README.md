@@ -68,7 +68,7 @@ npm run dev
 
 ## Inspiration
 
-This API is based on this [bezkoder tutorial](https://www.bezkoder.com/node-js-rest-api-express-mysql/).
+This API is based on those bezkoder tutorial for [pai rest](https://www.bezkoder.com/node-js-rest-api-express-mysql/) and [api rest with sequelize](https://www.bezkoder.com/node-js-express-sequelize-mysql/).
 
 ## Roadmap
 
