@@ -144,7 +144,7 @@ exports.update = (req, res) => {
   req.body.password = req.user.password;
   req.body.salt = req.user.salt;
 
-  userService.updateById(req.user.id_user, new User(req.body), (err, data) => {
+  userService.updateById(req.user.id_user, req.body, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         return res.status(404).send({
