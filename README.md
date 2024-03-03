@@ -76,6 +76,7 @@ This API is based on those bezkoder tutorial for [pai rest](https://www.bezkoder
 - Add security to routes with JSON Web Token (Done)
 - Dockerize the API
 - Use ORM
+- Bulk creation of data for test
 - Add role entity
 - Add security based on role
 - Add unit test
