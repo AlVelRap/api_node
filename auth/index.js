@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.model");
+// const User = require("../models/user.model");
+const userService = require("../services/user.service");
 const { JWT_SECRET } = require("../constants");
 
 const isAuthenticated = (req, res, next) => {
@@ -13,7 +14,7 @@ const isAuthenticated = (req, res, next) => {
     if (err) {
       return res.sendStatus(403);
     }
-    User.findById(decoded._id, (err, data) => {
+    userService.findById(decoded._id, (err, data) => {
       if (err) {
         return res.sendStatus(403);
       }
