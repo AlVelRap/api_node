@@ -20,7 +20,6 @@ exports.create = (newUser, result) => {
 };
 
 exports.findById = (id, result) => {
-  console.log(id);
   User.findByPk(id)
     .then((data) => {
       if (data) {
