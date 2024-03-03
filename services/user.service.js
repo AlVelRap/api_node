@@ -54,15 +54,14 @@ exports.findByEmail = (email, result) => {
 };
 
 exports.updateById = (id, user, result) => {
-  id = user.id;
-  User.update(user, { where: { id: id } })
+  User.update(user, { where: { id_user: id } })
     .then((num) => {
       if (num == 0) {
         result({ kind: "not_found" }, null);
         return;
       }
-      console.log("user updated: ", { id: id, ...user });
-      result(null, { id: id, ...user });
+      console.log("user updated: ", { id_user: id, ...user });
+      result(null, { id_user: id, ...user });
     })
     .catch((err) => {
       console.log("error: ", err);
@@ -72,7 +71,7 @@ exports.updateById = (id, user, result) => {
 };
 
 exports.remove = (id, result) => {
-  User.destroy({ where: { id: id } })
+  User.destroy({ where: { id_user: id } })
     .then((num) => {
       if (num == 0) {
         result({ kind: "not_found" }, null);
