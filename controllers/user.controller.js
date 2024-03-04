@@ -35,47 +35,61 @@ exports.register = (req, res) => {
   }
 
   // Check for asynchrony with await and async to avoid callback hell
-
-  userService.findByEmail(req.body.email, (err, data) => {
-    if (data) {
-      return res.status(400).send({
-        // Check this HTTP Code
-        message: "User already exists.",
-      });
+  userService.register(req.body, (err, data) => {
+    if (err) {
+      return res.status(500).send(err);
     }
-    // Create salt
-    crypto.randomBytes(16, (err, saltBytes) => {
-      const newSalt = saltBytes.toString("base64");
-      // Encrypt password
-      crypto.pbkdf2(
-        req.body.password,
-        newSalt,
-        iterations,
-        keylen,
-        DIGEST_PASSWORD,
-        (err, key) => {
-          const encryptedPassword = key.toString("base64");
-
-          const user = {
-            name: req.body.name,
-            lastname: req.body.lastname,
-            email: req.body.email,
-            password: encryptedPassword,
-            salt: newSalt,
-          };
-
-          userService.create(user, (err, data) => {
-            if (err)
-              return res.status(500).send({
-                message:
-                  err.message || "An error occurred while creating the user.",
-              });
-            else res.send(data);
-          });
-        }
-      );
-    });
+    userResponse = {
+      id_user: data.id_user,
+      name: data.name,
+      lastname: data.lastname,
+      email: data.email,
+      updatedAt: data.updatedAt,
+      createdAt: data.createdAt,
+    };
+    return res.send(userResponse);
   });
+  // userService.findByEmail(req.body.email, (err, data) => {
+  //   if (data) {
+  //     return res.status(400).send({
+  //       // Check this HTTP Code
+  //       message: "User already exists.",
+  //     });
+  //     return res.send(data);
+  //   }
+  //   // Create salt
+  //   crypto.randomBytes(16, (err, saltBytes) => {
+  //     const newSalt = saltBytes.toString("base64");
+  //     // Encrypt password
+  //     crypto.pbkdf2(
+  //       req.body.password,
+  //       newSalt,
+  //       iterations,
+  //       keylen,
+  //       DIGEST_PASSWORD,
+  //       (err, key) => {
+  //         const encryptedPassword = key.toString("base64");
+
+  //         const user = {
+  //           name: req.body.name,
+  //           lastname: req.body.lastname,
+  //           email: req.body.email,
+  //           password: encryptedPassword,
+  //           salt: newSalt,
+  //         };
+
+  //         userService.create(user, (err, data) => {
+  //           if (err)
+  //             return res.status(500).send({
+  //               message:
+  //                 err.message || "An error occurred while creating the user.",
+  //             });
+  //           else res.send(data);
+  //         });
+  //       }
+  //     );
+  //   });
+  // });
 };
 
 exports.login = (req, res) => {
@@ -85,30 +99,37 @@ exports.login = (req, res) => {
     });
   }
 
-  userService.findByEmail(req.body.email, (err, data) => {
-    if (!data) {
-      return res.status(404).send({
-        message: `Incorrect username or password`,
-      });
+  userService.login(req.body, (err, data) => {
+    if (err) {
+      return res.status(404).send(err);
     }
-    crypto.pbkdf2(
-      req.body.password,
-      data.salt,
-      iterations,
-      keylen,
-      DIGEST_PASSWORD,
-      (err, key) => {
-        const encryptedPassword = key.toString("base64");
-        if (data.password === encryptedPassword) {
-          const token = signToken(data.id_user);
-          return res.send({ token });
-        }
-        return res.status(404).send({
-          message: `Incorrect username or password`,
-        });
-      }
-    );
+    return res.send(data);
   });
+
+  // userService.findByEmail(req.body.email, (err, data) => {
+  //   if (!data) {
+  //     return res.status(404).send({
+  //       message: `Incorrect username or password`,
+  //     });
+  //   }
+  //   crypto.pbkdf2(
+  //     req.body.password,
+  //     data.salt,
+  //     iterations,
+  //     keylen,
+  //     DIGEST_PASSWORD,
+  //     (err, key) => {
+  //       const encryptedPassword = key.toString("base64");
+  //       if (data.password === encryptedPassword) {
+  //         const token = signToken(data.id_user);
+  //         return res.send({ token });
+  //       }
+  //       return res.status(404).send({
+  //         message: `Incorrect username or password`,
+  //       });
+  //     }
+  //   );
+  // });
 };
 
 exports.findOne = (req, res) => {
