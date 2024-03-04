@@ -25,6 +25,7 @@ Built with:
 - ExpressJS
 - MySQL
 - JSON Web Token
+- Sequelize
 
 ## Getting Started
 
@@ -68,13 +69,17 @@ npm run dev
 
 ## Inspiration
 
-This API is based on this [bezkoder tutorial](https://www.bezkoder.com/node-js-rest-api-express-mysql/).
+This API is based on those bezkoder tutorial for [pai rest](https://www.bezkoder.com/node-js-rest-api-express-mysql/) and [api rest with sequelize](https://www.bezkoder.com/node-js-express-sequelize-mysql/).
 
 ## Roadmap
 
 - Create API REST with Node and Express (Done)
 - Add security to routes with JSON Web Token (Done)
 - Dockerize the API
+- Use ORM
+- Bulk creation of data for test
+- Add role entity
+- Add security based on role
 - Add unit test
 - Add e2e test
 - Create a Pipeline for Github Actions

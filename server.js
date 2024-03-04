@@ -17,6 +17,16 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
+// Synchronize DB
+const db = require("./models");
+db.sequelize.sync({ force: true })
+  .then(() => {
+    console.log("Synced db.");
+  })
+  .catch((err) => {
+    console.log("Failed to sync db: " + err.message);
+  });
+
 // Our routes
 require("./routes/user.route")(app)
 

@@ -1,12 +1,19 @@
 // -----------------------
 // TODO:
 //  - Update only pass
+//  - Move Register and Login data access logic to the service
 // -----------------------
 
 const User = require("../models/user.model.js");
+const userService = require("../services/user.service.js");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET, DIGEST_PASSWORD, JWT_LIFE, JWT_ALGORITHM } = require("../constants");
+const {
+  JWT_SECRET,
+  DIGEST_PASSWORD,
+  JWT_LIFE,
+  JWT_ALGORITHM,
+} = require("../constants");
 
 // Constants for encrypt password
 const iterations = 10000;
@@ -28,7 +35,8 @@ exports.register = (req, res) => {
   }
 
   // Check for asynchrony with await and async to avoid callback hell
-  User.findByEmail(req.body.email, (err, data) => {
+
+  userService.findByEmail(req.body.email, (err, data) => {
     if (data) {
       return res.status(400).send({
         // Check this HTTP Code
@@ -47,15 +55,16 @@ exports.register = (req, res) => {
         DIGEST_PASSWORD,
         (err, key) => {
           const encryptedPassword = key.toString("base64");
-          // Create a new User
-          const user = new User({
+
+          const user = {
             name: req.body.name,
             lastname: req.body.lastname,
             email: req.body.email,
             password: encryptedPassword,
             salt: newSalt,
-          });
-          User.create(user, (err, data) => {
+          };
+
+          userService.create(user, (err, data) => {
             if (err)
               return res.status(500).send({
                 message:
@@ -76,7 +85,7 @@ exports.login = (req, res) => {
     });
   }
 
-  User.findByEmail(req.body.email, (err, data) => {
+  userService.findByEmail(req.body.email, (err, data) => {
     if (!data) {
       return res.status(404).send({
         message: `Incorrect username or password`,
@@ -103,9 +112,8 @@ exports.login = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-  User.findById(req.user.id_user, (err, data) => {
+  userService.findById(req.user.id_user, (err, data) => {
     if (err) {
-      console.log(err);
       if (err.kind === "not_found") {
         res.status(404).send({
           message: `User with id ${req.user.id_user} not found.`,
@@ -136,8 +144,7 @@ exports.update = (req, res) => {
   req.body.password = req.user.password;
   req.body.salt = req.user.salt;
 
-  // console.log(req.body);
-  User.updateById(req.user.id_user, new User(req.body), (err, data) => {
+  userService.updateById(req.user.id_user, req.body, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         return res.status(404).send({
@@ -159,7 +166,7 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  User.remove(req.user.id_user, (err, data) => {
+  userService.remove(req.user.id_user, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
