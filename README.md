@@ -25,6 +25,7 @@ Built with:
 - ExpressJS
 - MySQL
 - JSON Web Token
+- Sequelize
 
 ## Getting Started
 
