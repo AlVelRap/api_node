@@ -2,6 +2,7 @@ require("dotenv").config(); // environement variables
 const express = require("express");
 const app = express();
 const path = require("path");
+const initDb = require("./init");
 
 // Variables
 const PORT = process.env.EXPRESS_PORT || 3000;
@@ -19,20 +20,24 @@ app.get("/", (req, res) => {
 
 // Synchronize DB
 const db = require("./models");
-db.sequelize.sync({ force: true })
+db.sequelize
+  .sync({ force: true })
   .then(() => {
     console.log("Synced db.");
+    initDb.runs();
   })
   .catch((err) => {
     console.log("Failed to sync db: " + err.message);
   });
 
 // Our routes
-require("./routes/user.route")(app)
+require("./routes/user.route")(app);
 
 app.listen(PORT, () => {
-  if(process.env.DB_HOST == "localhost")
+  if (process.env.DB_HOST == "localhost")
     console.log(`App listening on http://${HOST}:${PORT}`);
   else
-    console.log(`App listening on http://${HOST}:${process.env.NODE_LOCAL_PORT}`);
+    console.log(
+      `App listening on http://${HOST}:${process.env.NODE_LOCAL_PORT}`
+    );
 });
