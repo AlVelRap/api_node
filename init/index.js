@@ -1,4 +1,5 @@
 const userService = require("../services/user.service");
+const roleService = require("../services/role.service");
 exports.runs = async () => {
   const user1 = {
     name: "Alberto",
@@ -29,4 +30,10 @@ exports.runs = async () => {
   userService.register(user2, (err, data) => {});
   userService.register(user3, (err, data) => {});
   userService.register(user4, (err, data) => {});
+
+  const role1 = { name: "admin" };
+  const role2 = { name: "user" };
+
+  roleService.create(role1, (err, data) => {});
+  roleService.create(role2, (err, data) => {});
 };
