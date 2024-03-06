@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const User = sequelize.define("user", {
+  const Role = sequelize.define("role", {
     id_role: {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4,
@@ -11,5 +11,5 @@ module.exports = (sequelize, Sequelize) => {
     },
   });
 
-  return User;
+  return Role;
 };
