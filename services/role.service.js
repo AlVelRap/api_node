@@ -18,6 +18,32 @@ exports.create = (newRole, result) => {
     });
 };
 
+exports.findAll = (name, result) => {
+  var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+
+  Role.findAll({ where: condition })
+    .then((data) => {
+      console.log(data);
+      if (data) {
+        console.log(
+          "role found: ",
+          data.map((role) => role.dataValues)
+        );
+        result(
+          null,
+          data.map((role) => role.dataValues)
+        );
+        return;
+      }
+      result({ kind: "not_found" }, null);
+    })
+    .catch((err) => {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    });
+};
+
 exports.findById = (id, result) => {
   Role.findByPk(id)
     .then((data) => {
@@ -77,6 +103,19 @@ exports.remove = (id, result) => {
         return;
       }
       console.log("Erased role with id: ", id);
+      result(null, num);
+    })
+    .catch((err) => {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    });
+};
+
+exports.removeAll = (result) => {
+  Role.destroy({ where: {  },truncate:false })
+    .then((num) => {
+      console.log(`${num} Roles were deleted from DB.`);
       result(null, num);
     })
     .catch((err) => {
