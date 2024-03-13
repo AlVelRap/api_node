@@ -31,9 +31,13 @@ exports.runs = async () => {
   userService.register(user3, (err, data) => {});
   userService.register(user4, (err, data) => {});
 
-  const role1 = { name: "admin" };
-  const role2 = { name: "user" };
+  const role1 = { id_role: "test-admin", name: "admin" };
+  const role2 = { id_role: "test-user", name: "user" };
+  const role3 = { id_role: "test-delete", name: "delete" };
+  const role4 = { id_role: "test-update", name: "update" };
 
   roleService.create(role1, (err, data) => {});
   roleService.create(role2, (err, data) => {});
+  roleService.create(role3, (err, data) => {});
+  roleService.create(role4, (err, data) => {});
 };
