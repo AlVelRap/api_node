@@ -32,6 +32,7 @@ db.sequelize
 
 // Our routes
 require("./routes/user.route")(app);
+require("./routes/role.route")(app);
 
 app.listen(PORT, () => {
   if (process.env.DB_HOST == "localhost")
