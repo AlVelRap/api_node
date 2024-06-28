@@ -26,18 +26,18 @@ exports.runs = async () => {
     password: "juan",
   };
 
-  userService.register(user1, (err, data) => {});
-  userService.register(user2, (err, data) => {});
-  userService.register(user3, (err, data) => {});
-  userService.register(user4, (err, data) => {});
+  await userService.register(user1, (err, data) => {});
+  await userService.register(user2, (err, data) => {});
+  await userService.register(user3, (err, data) => {});
+  await userService.register(user4, (err, data) => {});
 
   const role1 = { id_role: "test-admin", name: "admin" };
   const role2 = { id_role: "test-user", name: "user" };
   const role3 = { id_role: "test-delete", name: "delete" };
   const role4 = { id_role: "test-update", name: "update" };
 
-  roleService.create(role1, (err, data) => {});
-  roleService.create(role2, (err, data) => {});
-  roleService.create(role3, (err, data) => {});
-  roleService.create(role4, (err, data) => {});
+  await roleService.create(role1, (err, data) => {});
+  await roleService.create(role2, (err, data) => {});
+  await roleService.create(role3, (err, data) => {});
+  await roleService.create(role4, (err, data) => {});
 };
