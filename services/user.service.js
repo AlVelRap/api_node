@@ -25,9 +25,10 @@ const signToken = (_id) => {
 // TODO:
 // - Add exceptions for ResourceNotFoundException
 // - Change all result for the correct ones
+// - Improve implementation of async/await, to use a correct one. For the moment works
 
-exports.create = (newUser, result) => {
-  User.create(newUser)
+exports.create = async (newUser, result) => {
+  await User.create(newUser)
     .then((data) => {
       console.log("user created: ", { ...data.dataValues });
       result(null, { ...data.dataValues });
@@ -39,7 +40,7 @@ exports.create = (newUser, result) => {
     });
 };
 
-exports.login = (user, result) => {
+exports.login = async (user, result) => {
   module.exports.findByEmail(user.email, (err, data) => {
     if (!data) {
       result({ message: `Incorrect username or password` }, null);
@@ -63,7 +64,7 @@ exports.login = (user, result) => {
   });
 };
 
-exports.register = (newUser, result) => {
+exports.register = async (newUser, result) => {
   module.exports.findByEmail(newUser.email, (err, data) => {
     if (data) {
       result({ message: "User already exists." }, null);
@@ -108,8 +109,8 @@ exports.register = (newUser, result) => {
   });
 };
 
-exports.findById = (id, result) => {
-  User.findByPk(id)
+exports.findById = async (id, result) => {
+  await User.findByPk(id)
     .then((data) => {
       if (data) {
         console.log("user found: ", data.dataValues);
@@ -125,8 +126,8 @@ exports.findById = (id, result) => {
     });
 };
 
-exports.findByEmail = (email, result) => {
-  User.findOne({ where: { email: email } })
+exports.findByEmail = async (email, result) => {
+  await User.findOne({ where: { email: email } })
     .then((data) => {
       if (data) {
         console.log("user found: ", data.dataValues);
@@ -142,8 +143,8 @@ exports.findByEmail = (email, result) => {
     });
 };
 
-exports.updateById = (id, user, result) => {
-  User.update(user, { where: { id_user: id } })
+exports.updateById = async (id, user, result) => {
+  await User.update(user, { where: { id_user: id } })
     .then((num) => {
       if (num == 0) {
         result({ kind: "not_found" }, null);
@@ -159,8 +160,8 @@ exports.updateById = (id, user, result) => {
     });
 };
 
-exports.remove = (id, result) => {
-  User.destroy({ where: { id_user: id } })
+exports.remove = async (id, result) => {
+  await User.destroy({ where: { id_user: id } })
     .then((num) => {
       if (num == 0) {
         result({ kind: "not_found" }, null);

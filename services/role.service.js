@@ -4,9 +4,10 @@ const Op = db.Sequelize.Op;
 
 // TODO:
 // - Add exceptions for ResourceNotFoundException
+// - Improve implementation of async/await, to use a correct one. For the moment works
 
-exports.create = (newRole, result) => {
-  Role.create(newRole)
+exports.create = async (newRole, result) => {
+  await Role.create(newRole)
     .then((data) => {
       console.log("role created: ", { ...data.dataValues });
       result(null, { ...data.dataValues });
@@ -18,10 +19,10 @@ exports.create = (newRole, result) => {
     });
 };
 
-exports.findAll = (name, result) => {
+exports.findAll = async (name, result) => {
   var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
 
-  Role.findAll({ where: condition })
+  await Role.findAll({ where: condition })
     .then((data) => {
       console.log(data);
       if (data) {
@@ -44,8 +45,8 @@ exports.findAll = (name, result) => {
     });
 };
 
-exports.findById = (id, result) => {
-  Role.findByPk(id)
+exports.findById = async (id, result) => {
+  await Role.findByPk(id)
     .then((data) => {
       if (data) {
         console.log("role found: ", data.dataValues);
@@ -61,8 +62,8 @@ exports.findById = (id, result) => {
     });
 };
 
-exports.findByName = (name, result) => {
-  Role.findOne({ where: { name: name } })
+exports.findByName = async (name, result) => {
+  await Role.findOne({ where: { name: name } })
     .then((data) => {
       if (data) {
         console.log("role found: ", data.dataValues);
@@ -78,8 +79,8 @@ exports.findByName = (name, result) => {
     });
 };
 
-exports.updateById = (id, role, result) => {
-  Role.update(role, { where: { id_role: id } })
+exports.updateById = async (id, role, result) => {
+  await Role.update(role, { where: { id_role: id } })
     .then((num) => {
       if (num == 0) {
         result({ kind: "not_found" }, null);
@@ -95,8 +96,8 @@ exports.updateById = (id, role, result) => {
     });
 };
 
-exports.remove = (id, result) => {
-  Role.destroy({ where: { id_role: id } })
+exports.remove = async (id, result) => {
+  await Role.destroy({ where: { id_role: id } })
     .then((num) => {
       if (num == 0) {
         result({ kind: "not_found" }, null);
@@ -112,8 +113,8 @@ exports.remove = (id, result) => {
     });
 };
 
-exports.removeAll = (result) => {
-  Role.destroy({ where: {  },truncate:false })
+exports.removeAll = async (result) => {
+  await Role.destroy({ where: {  },truncate:false })
     .then((num) => {
       console.log(`${num} Roles were deleted from DB.`);
       result(null, num);
