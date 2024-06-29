@@ -1,5 +1,6 @@
 const db = require("../models");
 const User = db.user;
+const Role = db.role;
 const Op = db.Sequelize.Op;
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
@@ -111,10 +112,21 @@ exports.register = async (newUser, result) => {
 };
 
 exports.findById = async (id, result) => {
-  await User.findByPk(id)
+  await User.findByPk(id, {
+    include: [
+      {
+        model: Role,
+        as: "roles",
+        attributes: ["id_role", "name"],
+        through: {
+          attributes: [],
+        },
+      },
+    ],
+  })
     .then((data) => {
       if (data) {
-        console.log("user found: ", data.dataValues);
+        console.log("user found: ", JSON.stringify(data.dataValues, null, 2));
         result(null, { ...data.dataValues });
         return;
       }
