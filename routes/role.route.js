@@ -7,6 +7,7 @@ module.exports = (app) => {
   // DONT FORGET TO UNCOMMENT isAuthenticated AGAIN!!!!!
 
   router.post("/",/*isAuthenticated,*/ role.create);
+  router.post("/user",/*isAuthenticated,*/ role.addUser);
   router.get("/", /*isAuthenticated,*/ role.findAll);
   router.get("/:id_role", /*isAuthenticated,*/ role.findOne);
   router.put("/:id_role",/*isAuthenticated,*/ role.update);
