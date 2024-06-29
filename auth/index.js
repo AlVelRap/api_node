@@ -26,6 +26,22 @@ const isAuthenticated = (req, res, next) => {
   });
 };
 
+const hasRoles = (permittedRoles) => (req, res, next) => {
+
+  // Get roles
+  const userRoles = req.user.roles.map((role) => role.name);
+  
+  // Check if any role is permitted
+  const commonRole = userRoles.find((userRole) => permittedRoles.includes(userRole));
+  const isPermittedRole = commonRole !== undefined;
+
+  if (isPermittedRole) {
+    return next();
+  }
+  res.sendStatus(403);
+};
+
 module.exports = {
   isAuthenticated,
+  hasRoles,
 };

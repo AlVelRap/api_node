@@ -47,6 +47,8 @@ exports.runs = async () => {
 
   // Add roles to users
   await roleService.addUser(role1.id_role, user1.id_user, (err, data)=>{});
+  await roleService.addUser(role2.id_role, user1.id_user, (err, data)=>{});
+  await roleService.addUser(role3.id_role, user1.id_user, (err, data)=>{});
   await roleService.addUser(role2.id_role, user2.id_user, (err, data)=>{});
   await roleService.addUser(role3.id_role, user3.id_user, (err, data)=>{});
   await roleService.addUser(role4.id_role, user4.id_user, (err, data)=>{});
