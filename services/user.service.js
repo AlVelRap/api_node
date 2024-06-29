@@ -84,6 +84,7 @@ exports.register = async (newUser, result) => {
           const encryptedPassword = key.toString("base64");
 
           const user = {
+            id_user: newUser.id_user,
             name: newUser.name,
             lastname: newUser.lastname,
             email: newUser.email,

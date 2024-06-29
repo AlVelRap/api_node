@@ -1,5 +1,6 @@
 const db = require("../models");
 const Role = db.role;
+const User = db.user;
 const Op = db.Sequelize.Op;
 
 // TODO:
@@ -121,6 +122,36 @@ exports.removeAll = async (result) => {
     })
     .catch((err) => {
       console.log("error: ", err);
+      result(err, null);
+      return;
+    });
+};
+
+exports.addUser = (roleId, userId, result) => {
+  Role.findByPk(roleId)
+    .then((role) => {
+      if (!role) {
+        console.log("Role not found!");
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      console.log(userId);
+      User.findByPk(userId).then((user) => {
+        if (!user) {
+          console.log("User not found!");
+          result({ kind: "not_found" }, null);
+          return;
+        }
+
+        role.addUser(user);
+        console.log(
+          `>> added User id=${user.id_user} to Role id=${role.id_role}`
+        );
+        result(null, user);
+      });
+    })
+    .catch((err) => {
+      console.log(">> Error while adding User to Role: ", err);
       result(err, null);
       return;
     });

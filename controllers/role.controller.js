@@ -124,3 +124,25 @@ exports.deleteAll = (req, res) => {
     } else res.send({ message: `${data} Role deleted successfully!` });
   });
 };
+
+exports.addUser=(req, res)=>{
+  
+  roleId=req.body.id_role
+  userId=req.body.id_user
+
+  roleService.addUser(roleId,userId, (err,data)=>{
+    if(err){
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Role/User not found.`,
+        });
+      } else {
+        res.status(500).send({
+          message: `Cannot add Role with id ${roleId} to User with id ${userId}.`,
+        });
+      }
+
+    }else res.send({message: `added Role id='${roleId}' to User id='${data.id_user}'`})
+  })
+  
+}
