@@ -28,4 +28,18 @@ services:
       - DB_NAME=$DB_NAME
       - DB_PORT=$DB_PORT
     stdin_open: true
-    tty: true
+    tty: true  
+    
+  nginx:
+    depends_on:
+      - database
+      - backend
+    image: nginx:1.27.0
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs/api-test.crt:/etc/ssl/certs/api-test.crt
+      - ./nginx/certs/api-test.key:/etc/ssl/private/api-test.key
